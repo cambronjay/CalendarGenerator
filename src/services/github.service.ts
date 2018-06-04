@@ -10,14 +10,6 @@ export class GitHubService {
 
     }
 
-    // Search for users
-    public searchUsers(searchParam: string) {
-        return this.http.get(`https://api.github.com/search/users?q=${searchParam}`)
-            .pipe(
-            catchError(this.handleError)
-            );
-    }
-
     // Get user details
     public getDetails(): Observable<any> {
         return this.http.get('https://api.github.com/users/cambronjay')
@@ -27,7 +19,7 @@ export class GitHubService {
     }
 
     // Get user repo details
-    public getrepoDetails(login: string) {
+    public getrepoDetails(login: string): Observable<any> {
         return this.http.get(`https://api.github.com/users/cambronjay/repos`)
             .pipe(
             catchError(this.handleError)
