@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, forkJoin } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import * as moment from 'moment';
 
 @Injectable()
-export class GitHubService {
+export class NPMService {
 
     constructor(private http: HttpClient) {
 
     }
 
-    // Get user details
-    public getDetails(): Observable<any> {
-        return this.http.get('https://api.github.com/users/cambronjay')
-            .pipe(
-            catchError(this.handleError)
-            );
-    }
-
-    // Get user repo details
-    public getrepoDetails(login: string): Observable<any> {
-        return this.http.get('https://api.github.com/users/cambronjay/repos')
+    // Get package downloads
+    public getPackageDownloads(): Observable<any> {
+        return forkJoin([
+            this.http.get('https://api.npmjs.org/downloads/point/2012-01-01:' + moment().format('YYYY-MM-DD') + '/location-utilities'),
+            this.http.get('https://api.npmjs.org/downloads/point/2012-01-01:' + moment().format('YYYY-MM-DD') + '/ngrx-state-sync'),
+            this.http.get('https://api.npmjs.org/downloads/point/2012-01-01:' + moment().format('YYYY-MM-DD') + '/enterprise-angular-generator')
+        ])
             .pipe(
             catchError(this.handleError)
             );

@@ -1,28 +1,47 @@
 <mat-toolbar color="primary">
   <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="openSideNav()" *ngIf="isHandset$ | async">
-      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-    </button>
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
   <span>Calendar Generator</span>
 </mat-toolbar>
 <div fxLayoutAlign.xs="start" fxLayoutAlign.sm="start" fxLayoutAlign="center center" fxLayout="row" fxLayout.sm="column"
-fxLayout.xs="column" fxLayoutGap="16px">
-<mat-card class="form-card">
+  fxLayout.xs="column" fxLayoutGap="16px">
+  <mat-card class="form-card">
     <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>Shiba Inu</mat-card-title>
-      <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+      <mat-card-title>Create a calendar</mat-card-title>
     </mat-card-header>
-    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
-    <mat-card-content>
-      <p>
-        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-        bred for hunting.
-      </p>
+    <mat-card-content style="margin-top:16px">
+      <form [formGroup]="calendarForm" class="calendar-form">
+        <ol>
+          <li>
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Enter Country Code" aria-label="Enter Country Code" [matAutocomplete]="auto" formControlName="countryCode">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let country of filteredCountries | async" [value]="country.code">
+                  <small>{{ country.name }}</small> |
+                  <small>Code: {{country.code}}</small>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </li>
+          <li>
+            <mat-form-field class="form-field">
+              <input matInput [matDatepicker]="startDate" formControlName="startDate" placeholder="Choose a start date">
+              <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+              <mat-datepicker #startDate></mat-datepicker>
+            </mat-form-field>
+          </li>
+          <li>
+            <mat-form-field class="form-field">
+              <input matInput type="number" formControlName="numberOfDays" placeholder="Choose a number of days">
+            </mat-form-field>
+          </li>
+        </ol>
+        <div fxLayout="row" fxLayoutAlign="center center">
+        <button mat-raised-button color="primary" [disabled]="!calendarForm.valid" (click)="generate()">Generate!</button>
+        </div>
+      </form>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
-    </mat-card-actions>
   </mat-card>
+  <div id="calendar-view"></div>
 </div>

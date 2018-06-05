@@ -19,7 +19,7 @@ export class AppComponent {
   private toggleMenuSubscription: Subscription;
   private toggleMenu: boolean;
 
-  constructor(private breakpointObserver: BreakpointObserver, private menuService: MenuService, private ref: ChangeDetectorRef, ) {
+  constructor(private breakpointObserver: BreakpointObserver, private menuService: MenuService, private ref: ChangeDetectorRef) {
     this.toggleMenu$ = this.menuService.menuState.asObservable();
   }
 
@@ -27,7 +27,6 @@ export class AppComponent {
     this.toggleMenuSubscription = this.toggleMenu$
       .subscribe(data => {
         this.toggleMenu = data;
-        console.log(data)
         this.ref.markForCheck();
       });
   }

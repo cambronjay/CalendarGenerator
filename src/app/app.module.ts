@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,9 +9,11 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '../theme/theme';
 import { GitHubService } from '../services/github.service';
+import { NPMService } from '../services/npm.service';
 import { MenuService } from '../services/menu.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppRouter } from './app.router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { AppRouter } from './app.router';
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
     AppRouter,
@@ -29,7 +32,8 @@ import { AppRouter } from './app.router';
     FlexLayoutModule
 
   ],
-  providers: [GitHubService, MenuService],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+  providers: [GitHubService, MenuService, NPMService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

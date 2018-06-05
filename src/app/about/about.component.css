@@ -1,0 +1,14 @@
+.avatar-image{
+    background-image: url('../../assets/avatar.png');
+    background-size: cover;
+}
+
+.about-card {
+    max-width: 400px;
+    margin-top: 32px;
+  }
+  
+  ion-icon {
+    font-size: 32px;
+  }
+  

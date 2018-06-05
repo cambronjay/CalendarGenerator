@@ -1,9 +1,64 @@
 <mat-toolbar color="primary">
-  <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+  <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="openSideNav()" *ngIf="isHandset$ | async">
       <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
     </button>
   <span>About</span>
 </mat-toolbar>
-<div>
-  test
+<div fxLayoutAlign.xs="start" fxLayoutAlign.sm="start" fxLayoutAlign="center center" fxLayout="row" fxLayout.sm="column"
+  fxLayout.xs="column" fxLayoutGap="16px">
+  <mat-card class="about-card">
+    <mat-card-header>
+      <div mat-card-avatar class="avatar-image" [ngStyle]="getAvatarImage()"></div>
+      <mat-card-title>{{gitHub?.name}}</mat-card-title>
+      <mat-card-subtitle></mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content style="margin-top:16px">
+      <p>
+        {{gitHub?.bio}}
+      </p>
+      <mat-divider></mat-divider>
+      <mat-list>
+        <mat-list-item (click)="visitPortfolio()" style="cursor: pointer">
+          <ion-icon name="list-box"></ion-icon>
+          <h4 mat-line class="mat-h4">Portfolio Site</h4>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+          <ion-icon name="mail"></ion-icon>
+          <h4 mat-line class="mat-h4">cambronjay@gmail.com</h4>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+          <ion-icon name="call"></ion-icon>
+          <h4 mat-line class="mat-h4">502-883-8361</h4>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item (click)="visitGitHub()" style="cursor: pointer">
+          <ion-icon name="logo-github"></ion-icon>
+          <h4 mat-line class="mat-h4">@cambronjay</h4>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item (click)="visitLinkedIn()" style="cursor: pointer">
+          <ion-icon name="logo-linkedin"></ion-icon>
+          <h4 mat-line class="mat-h4">@jaycambron</h4>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item (click)="visitNPM()" style="cursor: pointer">
+          <ion-icon name="logo-npm"></ion-icon>
+          <h4 mat-line class="mat-h4">@cambronjay</h4>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+          <ion-icon name="stats"></ion-icon>
+          <h4 mat-line class="mat-h4">NPM Downloads</h4>
+          <p mat-line>{{npm?.downloads | number}}</p>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+          <ion-icon name="pin"></ion-icon>
+          <h4 mat-line class="mat-h4">Louisville, Ky</h4>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
 </div>
