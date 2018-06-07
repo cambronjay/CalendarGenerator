@@ -109,12 +109,17 @@ export class CalendarGeneratorComponent {
     //   }
     //   this.calendars.push(calendar);
     // }
-    
+    years.forEach(year=> {
+      year.months = _.filter(year.months, function(o){
+        return o.daysInMonth != null;
+      })
+    });
+    this.calendars = years;
     console.log(calendarDate);
     console.log(calendarYears);
     console.log(years)
   }
-
+ 
   private filterCountries(identifier: string): Country[] {
     return this.countries.filter(country =>
       (country.name.toLowerCase().indexOf(identifier.toLowerCase()) === 0) || (country.code.toLowerCase().indexOf(identifier.toLowerCase()) === 0)
@@ -167,14 +172,13 @@ export class CalendarGeneratorComponent {
   }
 
   private visibleDaysInMonth(daysInRangeInMonth: any, numberOfdaysInMonth: number, year: number, month: number): Array<any> {
-    console.log(daysInRangeInMonth);
     let allDays = [];
     let countryHolidays = new holidays(this.calendarForm.get('countryCode').value);
-    let d = [1,2,3,4,5,6,7,8,9,10,11,12];
-    d = _.forEach(d,function(day){
-      let time = year.toString()+"-"+day.toString()+"-"+month.toString();
+    let d;
+    for(d=1; d < numberOfdaysInMonth; d++) {
+      let time = year.toString()+"-"+d.toString()+"-"+month.toString();
       let isInRange = _.find(daysInRangeInMonth, function(o){
-        o.day == day;
+        return o.day == d;
       });
       let dayOfWeek = moment(time,"YYYY-DD-MM").isoWeekday();
       let isWeekDay: boolean;
@@ -184,13 +188,15 @@ export class CalendarGeneratorComponent {
         isWeekDay = true;
       }
       let dayOfMonth = {
-        day: day,
-        isInRange: isInRange,
+        day: d,
+        dayOfTheWeek: dayOfWeek,
+        isInRange: isInRange ? true: false,
         isHoliday: countryHolidays.isHoliday(moment(time,"YYYY-DD-MM").toDate()),
         isWeekDay: isWeekDay
       }      
       allDays.push(dayOfMonth);
-    });
+    }
+   // });
     // for(d=1; d < numberOfdaysInMonth; d++) {
     //   let dayOfMonth;
     //   //let dayInRange = daysInRangeInMonth.indexOf(d);
@@ -228,14 +234,19 @@ export class CalendarGeneratorComponent {
     // }
     return allDays;
   }
-  private dayIsInRange(days: any, day: number): boolean{
-    let isInRange = _.find(days, function(o){
-      o.day == day;
-    });
-    if(isInRange != undefined){
-      return true;
+  private getBackgroundColor(day: any): any {
+    if(!day.isInRange){
+      return { "background-color": "gray" };
     } else {
-      return false;
+      if(day.isHoliday){
+        return { "background-color": "orange" };
+      } else {
+        if(day.isWeekDay){
+          return { "background-color": "green" };
+        } else {
+          return { "background-color": "yellow" };
+        }
+      }
     }
   }
   // private daysInMonth(daysInMonth: number, days: any, year: number): Array<any> {

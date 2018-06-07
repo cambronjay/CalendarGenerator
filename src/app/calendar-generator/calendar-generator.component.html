@@ -4,7 +4,7 @@
       </button>
   <span>Calendar Generator</span>
 </mat-toolbar>
-<div fxLayoutAlign.xs="start" fxLayoutAlign.sm="start" fxLayoutAlign="center center" fxLayout="row" fxLayout.sm="column"
+<div fxLayoutAlign.xs="start" fxLayoutAlign.sm="start" fxLayoutAlign="center center" fxLayout="column" fxLayout.sm="column"
   fxLayout.xs="column" fxLayoutGap="16px">
   <mat-card class="form-card">
     <mat-card-header>
@@ -43,14 +43,15 @@
       </form>
     </mat-card-content>
   </mat-card>
-  <div id="calendar-view" *ngIf="calendars.length > 0">
-    <mat-list>
-      <mat-list-item *ngFor="let calendar of calendars">
+  
+  <div id="calendar-view" style="height: 632px; width: 332px; overflow-y: scroll; margin:16px;overflow-x:hidden;" *ngIf="calendars.length > 0">
+        <div fxLayout="column" id="years" *ngFor="let calendar of calendars"> 
+        <div id="month" style="width:300px;border: 1px solid black; margin-top:16px;" *ngFor="let month of calendar.months">
           <div class="month">      
               <ul>
                 <li>
-                  {{calendar.month}}<br>
-                  <span style="font-size:18px">2017</span>
+                  {{month.month}}<br>
+                  <span style="font-size:18px">{{month.year}}</span>
                 </li>
               </ul>
             </div>
@@ -65,40 +66,12 @@
               <li>Sa</li>
             </ul>
             
-            <ul class="days">  
-              <li>1</li>
-              <li>2</li>
-              <li>3</li>
-              <li>4</li>
-              <li>5</li>
-              <li>6</li>
-              <li>7</li>
-              <li>8</li>
-              <li>9</li>
-              <li><span class="active">10</span></li>
-              <li>11</li>
-              <li>12</li>
-              <li>13</li>
-              <li>14</li>
-              <li>15</li>
-              <li>16</li>
-              <li>17</li>
-              <li>18</li>
-              <li>19</li>
-              <li>20</li>
-              <li>21</li>
-              <li>22</li>
-              <li>23</li>
-              <li>24</li>
-              <li>25</li>
-              <li>26</li>
-              <li>27</li>
-              <li>28</li>
-              <li>29</li>
-              <li>30</li>
-              <li>31</li>
+            <ul class="days" >
+              <li *ngFor="let day of month.daysInMonth" [ngStyle]="getBackgroundColor(day)">{{day.day}}</li>
             </ul>
-      </mat-list-item>
-    </mat-list>
+          </div>
+        </div>
   </div>
+
+
 </div>
