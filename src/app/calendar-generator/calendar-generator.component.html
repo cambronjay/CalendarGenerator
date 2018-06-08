@@ -43,34 +43,33 @@
       </form>
     </mat-card-content>
   </mat-card>
-  
-  <div id="calendar-view" style="height: 632px; width: 332px; overflow-y: scroll; margin:16px;overflow-x:hidden;" *ngIf="calendars.length > 0">
-        <div fxLayout="column" id="years" *ngFor="let calendar of calendars"> 
-        <div id="month" style="width:300px;border: 1px solid black; margin-top:16px;" *ngFor="let month of calendar.months">
-          <div class="month">      
-              <ul>
-                <li>
-                  {{month.month}}<br>
-                  <span style="font-size:18px">{{month.year}}</span>
-                </li>
-              </ul>
+
+  <div id="calendar-view" style="height: 632px; width: 452px; overflow-y: scroll; margin:16px;overflow-x:hidden;" *ngIf="calendars.length > 0">
+    <div fxLayout="column" id="years" *ngFor="let year of calendars">
+      <div id="month" style="width:420px;border: 1px solid black; margin-top:16px;" *ngFor="let month of year.months">
+        <section class="month">
+          <header>
+            <h1>{{month.month}} {{month.year}}</h1>
+          </header>
+          <article>
+            <div class="days">
+              <b>SU</b>
+              <b>MO</b>
+              <b>TU</b>
+              <b>WE</b>
+              <b>TH</b>
+              <b>FR</b>
+              <b>SA</b>
             </div>
-            
-            <ul class="weekdays">
-              <li>Su</li>
-              <li>Mo</li>
-              <li>Tu</li>
-              <li>We</li>
-              <li>Th</li>
-              <li>Fr</li>
-              <li>Sa</li>
-            </ul>
-            
-            <ul class="days" >
-              <li *ngFor="let day of month.daysInMonth" [ngStyle]="getBackgroundColor(day)">{{day.day}}</li>
-            </ul>
-          </div>
-        </div>
+            <div class="dates">
+              <div *ngFor="let week of month.weeksInMonth">
+                <span *ngFor="let day of week" [class]="getBackgroundColor(day)">{{day.day ? day.day : ''}}</span>
+              </div>
+            </div>
+          </article>
+        </section>
+      </div>
+    </div>
   </div>
 
 

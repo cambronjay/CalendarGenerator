@@ -11,7 +11,7 @@ import { Calendar } from '../../interfaces/calendar.interface';
 import * as moment from 'moment';
 import * as holidays from 'date-holidays';
 import * as _ from 'lodash';
-
+import * as calendar from 'node-calendar';
 export class Country {
   constructor(public name: string, public code: string, ) { }
 }
@@ -38,7 +38,7 @@ export class CalendarGeneratorComponent {
     this.calendarForm = this.fb.group({
       countryCode: ['', [Validators.required, Validators.pattern(countryCodePattern)]],
       startDate: [{ value: '', disabled: true }, Validators.required],
-      numberOfDays: [{ value: '', disabled: true }, [Validators.required, Validators.pattern('(^[0][1-9]+)|([1-9]\d*)')]],
+      numberOfDays: [{ value: '', disabled: true }, [Validators.required, Validators.pattern('(^[1-9]+)|([1-9]\d*)')]],
     });
 
     this.filteredCountries = this.calendarForm.get('countryCode').valueChanges
@@ -69,6 +69,7 @@ export class CalendarGeneratorComponent {
 
   private generate(): void {
     this.calendars = [];
+    moment.locale(this.calendarForm.get('countryCode').value.toLowerCase());
     let startDate = moment(this.calendarForm.get('startDate').value).format('YYYY-MM-DD');
     let endDate = moment(this.calendarForm.get('startDate').value).add(this.calendarForm.get('numberOfDays').value, 'days').format('YYYY-MM-DD');
     let calendar = genCalendarObj(startDate, endDate);
@@ -89,44 +90,23 @@ export class CalendarGeneratorComponent {
       }
       years.push(year);
     }
-   // let monthsInYears = this.monthsInYears(calendarDate);
-    // years.forEach(year => {
-    //   year.months = _.filter(monthsInYears, function(o){
-    //     return o.year == year.year
-    //   })
-    // });
-    // let c;
-    // for(c = 0; c < years.length; c++){
-    //   let monthsInYears = this.monthsInYear(calendarDate);
-
-    // }
-    // //let calendarMonthWeekDate = calendar.monthWeekDate;
-    // let m;
-    // for (m = 0; m < calendarDate.length; m++) {
-    //   let calendar = {
-    //     month: this.lookUpMonth(calendarDate[m].month),
-    //     daysInMonth: this.daysInMonth(moment(calendarDate[m].year.toString(),calendarDate[m].month.toString(), "YYYY-MM").daysInMonth(), calendarDate),
-    //   }
-    //   this.calendars.push(calendar);
-    // }
-    years.forEach(year=> {
-      year.months = _.filter(year.months, function(o){
-        return o.daysInMonth != null;
+    const startDay = moment().clone().startOf('month').startOf('week');
+    const endDay = moment().clone().endOf('month').endOf('week');
+    years.forEach(year => {
+      year.months = _.filter(year.months, function (o) {
+        return o.weeksInMonth != null;
       })
     });
     this.calendars = years;
-    console.log(calendarDate);
-    console.log(calendarYears);
-    console.log(years)
   }
- 
+
   private filterCountries(identifier: string): Country[] {
     return this.countries.filter(country =>
       (country.name.toLowerCase().indexOf(identifier.toLowerCase()) === 0) || (country.code.toLowerCase().indexOf(identifier.toLowerCase()) === 0)
     );
   }
 
-  private lookUpMonth(day:number): string {
+  private lookUpMonth(day: number): string {
     let month;
     switch (day) {
       case 1:
@@ -172,120 +152,61 @@ export class CalendarGeneratorComponent {
   }
 
   private visibleDaysInMonth(daysInRangeInMonth: any, numberOfdaysInMonth: number, year: number, month: number): Array<any> {
-    let allDays = [];
+    let cal = new calendar.Calendar(calendar.SUNDAY);
     let countryHolidays = new holidays(this.calendarForm.get('countryCode').value);
-    let d;
-    for(d=1; d < numberOfdaysInMonth; d++) {
-      let time = year.toString()+"-"+d.toString()+"-"+month.toString();
-      let isInRange = _.find(daysInRangeInMonth, function(o){
-        return o.day == d;
-      });
-      let dayOfWeek = moment(time,"YYYY-DD-MM").isoWeekday();
-      let isWeekDay: boolean;
-      if(dayOfWeek == 6 || dayOfWeek == 7){
-        isWeekDay = false;
-      } else {
-        isWeekDay = true;
-      }
-      let dayOfMonth = {
-        day: d,
-        dayOfTheWeek: dayOfWeek,
-        isInRange: isInRange ? true: false,
-        isHoliday: countryHolidays.isHoliday(moment(time,"YYYY-DD-MM").toDate()),
-        isWeekDay: isWeekDay
-      }      
-      allDays.push(dayOfMonth);
-    }
-   // });
-    // for(d=1; d < numberOfdaysInMonth; d++) {
-    //   let dayOfMonth;
-    //   //let dayInRange = daysInRangeInMonth.indexOf(d);
-    //   // let dayInRange = _.find(daysInRangeInMonth, function(o) {
-    //   //   console.log(d);
-    //   //   console.log(o.day);
-    //   //   o.day == d;
-    //   // });
-    //   // if(dayInRange > 0){
-    //   //   let time = daysInRangeInMonth[dayInRange].year.toString()+"-"+daysInRangeInMonth[dayInRange].day.toString()+"-"+daysInRangeInMonth[dayInRange].month.toString();
-    //   //   dayOfMonth = {
-    //   //     day: d,
-    //   //     isInRange: true,
-    //   //     isHoliday: countryHolidays.isHoliday(moment(time,"YYYY-DD-MM").toDate()),
-    //   //     isWeekDay: this.isWeekDay(moment(time,"YYYY-DD-MM").isoWeekday())
-    //   //   }
-    //   // } else {
-    //   //   let time = year.toString()+"-"+d.toString()+"-"+month.toString();
-    //   //   dayOfMonth = {
-    //   //     day: d,
-    //   //     isInRange: false,
-    //   //     isHoliday: countryHolidays.isHoliday(moment(time,"YYYY-DD-MM").toDate()),
-    //   //     isWeekDay: this.isWeekDay(moment(time,"YYYY-DD-MM").isoWeekday())
-    //   //   }
-    //   // }
-    //   let time = year.toString()+"-"+d.toString()+"-"+month.toString();
-    //   dayOfMonth = {
-    //     day: d,
-    //    // isInRange: this.dayIsInRange(daysInRangeInMonth, d),
-    //     isInRange: true,
-    //     isHoliday: countryHolidays.isHoliday(moment(time,"YYYY-DD-MM").toDate()),
-    //     isWeekDay: this.isWeekDay(moment(time,"YYYY-DD-MM").isoWeekday())
-    //   }      
-    //   allDays.push(dayOfMonth);
-    // }
-    return allDays;
-  }
-  private getBackgroundColor(day: any): any {
-    if(!day.isInRange){
-      return { "background-color": "gray" };
-    } else {
-      if(day.isHoliday){
-        return { "background-color": "orange" };
-      } else {
-        if(day.isWeekDay){
-          return { "background-color": "green" };
+    let weeks = cal.monthdayscalendar(year, month);
+    let newMonth = [];
+    let monthsInWeek = weeks.forEach(week => {
+      let newWeek = week.map(day => {
+        let newDay;
+        if (day == 0) {
+          newDay = {
+            day: null,
+            dayOfTheWeek: null,
+            isInRange: false,
+            isHoliday: false,
+            isWeekDay: false
+          }
         } else {
-          return { "background-color": "yellow" };
+          let time = year.toString() + "-" + day.toString() + "-" + month.toString();
+          let isInRange = _.find(daysInRangeInMonth, function (o) {
+            return o.day == day;
+          });
+          let dayOfWeek = moment(time, "YYYY-DD-MM").isoWeekday();
+          let isWeekDay: boolean;
+          if (dayOfWeek == 6 || dayOfWeek == 7) {
+            isWeekDay = false;
+          } else {
+            isWeekDay = true;
+          }
+          newDay = {
+            day: day,
+            dayOfTheWeek: dayOfWeek,
+            isInRange: isInRange ? true : false,
+            isHoliday: countryHolidays.isHoliday(moment(time, "YYYY-DD-MM").toDate()),
+            isWeekDay: isWeekDay
+          }
+        }
+        return newDay;
+      });
+      newMonth.push(newWeek);
+    });
+    return newMonth;
+  }
+
+  private getBackgroundColor(day: any): any {
+    if (!day.isInRange) {
+      return 'disable';
+    } else {
+      if (day.isHoliday) {
+        return 'holiday';
+      } else {
+        if (day.isWeekDay) {
+          return 'weekday';
+        } else {
+          return 'weekend';
         }
       }
-    }
-  }
-  // private daysInMonth(daysInMonth: number, days: any, year: number): Array<any> {
-  //   let allDays = [];
-  //   let countryHolidays = new holidays(this.calendarForm.get('countryCode').value);
-  //   let d;
-  //   for(d=0; d < daysInMonth; d++) {
-  //     let dayOfMonth;
-  //     let dayInRange = _.find(days, function(o) {
-  //       o.day == d
-  //     });
-      
-  //     if(dayInRange != undefined){
-  //       let time = dayInRange.year.toString()+"-"+dayInRange.day.toString()+"-"+dayInRange.month.toString();
-  //       dayOfMonth = {
-  //         day: d,
-  //         isInRange: true,
-  //         isHoliday: countryHolidays.isHoliday(moment(time,"YYYY-DD-MM").toDate()),
-  //         isWeekDay: this.isWeekDay(moment(time,"YYYY-DD-MM").isoWeekday())
-  //       }
-  //     } else {
-  //       let time = year.toString()+"-"+d.toString()+"-"+days[d].month.toString();
-  //       dayOfMonth = {
-  //         day: d,
-  //         isInRange: false,
-  //         isHoliday: false,
-  //         isWeekDay: this.isWeekDay(moment(time,"YYYY-DD-MM").isoWeekday())
-  //       }
-  //     }
-  //     allDays.push(dayOfMonth);
-  //   }
-  //   return allDays;
-  // }
-
-  private isWeekDay(dayOfWeek: number): boolean {
-    if(dayOfWeek == 6 || dayOfWeek == 7){
-      return false;
-    } else {
-      return true;
     }
   }
 
@@ -293,37 +214,22 @@ export class CalendarGeneratorComponent {
     let months = [];
     let m;
     for (m = 1; m < 13; m++) {
-      let timeStamp = year.toString()+"-"+m.toString();
-      let numberOfdaysInMonth = moment(timeStamp,"YYYY-MM").daysInMonth() + 1;
-      let daysInRangeInMonth = _.filter(days, function(o){
+      let timeStamp = year.toString() + "-" + m.toString();
+      let numberOfdaysInMonth = moment(timeStamp, "YYYY-MM").daysInMonth() + 1;
+      let daysInRangeInMonth = _.filter(days, function (o) {
         return o.year == year && o.month == m;
       });
-      
+     
+      console.log(moment('09', 'MM').format('MMMM'))
       let month = {
-        month: this.lookUpMonth(m),
+        month: moment().month(m-1),
         year: year.toString(),
-        daysInMonth: daysInRangeInMonth.length > 0 ? this.visibleDaysInMonth(daysInRangeInMonth, numberOfdaysInMonth, year, m) : null,
+        weeksInMonth: daysInRangeInMonth.length > 0 ? this.visibleDaysInMonth(daysInRangeInMonth, numberOfdaysInMonth, year, m) : null,
       }
-      //this.daysInMonth(moment(time,"YYYY-MM").daysInMonth(), days, days[m].year)
+
       months.push(month);
     }
     return months;
   }
-
-  // private monthsInYears(days: any): Array<any> {
-  //   let months = [];
-  //   let m;
-  //   for (m = 0; m < days.length; m++) {
-  //     let time = days[m].year.toString()+"-"+days[m].month.toString();
-  //     let month = {
-  //       month: this.lookUpMonth(days[m].month),
-  //       year: days[m].year,
-  //       daysInMonth: this.daysInMonth(moment(time,"YYYY-MM").daysInMonth(), days, days[m].year),
-  //     }
-  //     months.push(month);
-  //   }
-  //   return months;
-  // }
-
 
 }

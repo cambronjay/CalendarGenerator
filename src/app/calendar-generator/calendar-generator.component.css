@@ -13,75 +13,112 @@
     width: 100%;
   }
   
-  ol {
-    -webkit-padding-start: 0px;
+  ::selection {
+    background: rgba(0,0,0,.05);
+  }
+  body {
+    padding: 20px;
+    background: #d2d5e0;
+    font-family: 'Open Sans', sans-serif;
+  }
+  ul, h1, h2, h3, h4 {
+    margin: 0; padding: 0;
+    list-style: none;
+  }
+  a, li,
+  header nav span,
+  article span {
+    text-decoration: none;
+    transition: all .25s ease-in-out;
+  }
+  h1 {
+    font: 300 28px 'Open Sans';
+    color: #4c5373;
   }
 
-  * {box-sizing: border-box;}
-  ul {list-style-type: none;}
-  body {font-family: Verdana, sans-serif;}
-  
-  .month {
-      padding: 15px 25px;
-      width: 100%;
-      background: #673ab7;
-      text-align: center;
+  section.month {
+    overflow: hidden;
+    display: block;
+    float: left;
+    width: 420px; height: auto;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0,0,0,.25);
+    border-radius: 5px;
   }
+    header {
+      position: relative;
+      display: block;
+      height: 80px;
+      background: #e9eaf0;
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,.06);
+    }
+      header h1 {
+        margin-left: 30px;
+        line-height: 80px;
+      }
   
-  .month ul {
-      margin: 0;
-      padding: 0;
-  }
-  
-  .month ul li {
-      color: white;
-      font-size: 20px;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-  }
-  
-  .month .prev {
+  article {padding: 6px 0 25px 25px}
+    article b,
+    article span {
+      display: block;
       float: left;
-      padding-top: 10px;
-  }
-  
-  .month .next {
-      float: right;
-      padding-top: 10px;
-  }
-  
-  .weekdays {
-      margin: 0;
-      padding: 10px 0;
-      background-color: #ddd;
-  }
-  
-  .weekdays li {
-      display: inline-block;
-      width: 13.6%;
-      color: #666;
+      width: 45px; height: 45px;
+      margin: 4px;
       text-align: center;
-  }
-  
-  .days {
-      padding: 0px 0px 0px 0px;
-      background: gray;
-      margin: 0;
-  }
-  
-  .days li {
-      list-style-type: none;
-      display: inline-block;
-      width: 13.6%;
-      text-align: center;
-      margin-bottom: 0px;
-      font-size:12px;
+    }
+    article b {
+      font: 600 16px/45px 'Open Sans';
+      color: #91d9ff;
+    }
+    article span {
+      font: 300 19px/45px 'Open Sans';
+      color: #4c5373;
+      box-shadow: inset 0 0 1px 1px #d9dce5;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    article span.disable {
       color: black;
-  }
-  
-  .days li .active {
-      padding: 5px;
-      background: #1abc9c;
-      color: white !important
-  }
-  
+      background: gray;
+      box-shadow: inset 0 0 1px 1px #f3f4f7;
+    }
+      article span:not(.disable):hover {
+        background: #cccccc;
+        box-shadow:
+          inset 0 0 1px 1px #d9dce5,
+          0 1px 3px -1px #cdd0dd;
+      }
+
+      article span.holiday,
+      article span.holiday:hover,
+      article span.holiday:active {
+        color: #fff;
+        box-shadow:
+          inset 0 0 1px 1px #ff8263,
+          0 1px 3px -1px #ff8263;
+        background: #ff8263;
+      }
+
+      article span.weekend,
+      article span.weekend:hover,
+      article span.weekend:active {
+        color: black;
+        box-shadow:
+          inset 0 0 1px 1px yellow,
+          0 1px 3px -1px yellow;
+        background: yellow;
+      }
+      article span.weekday,
+      article span.weekday:hover,
+      article span.weekday:active {
+        color: black;
+        box-shadow:
+          inset 0 0 1px 1px green,
+          0 1px 3px -1px green;
+        background: green;
+      }      
+    article div {
+      display: block;
+      overflow: hidden;
+      clear: both;
+    }
