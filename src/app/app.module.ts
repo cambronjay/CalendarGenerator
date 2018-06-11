@@ -14,6 +14,8 @@ import { MenuService } from '../services/menu.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppRouter } from './app.router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  providers: [GitHubService, MenuService, NPMService],
+  providers: [
+    GitHubService, 
+    MenuService, 
+    NPMService,
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
