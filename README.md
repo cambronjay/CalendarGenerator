@@ -6,6 +6,6 @@ This application allows the user to generate calendars in their language/country
 
 Simply pull down this repo, install the Angular CLI, install the dependencies using npm, and then run npm start! Enjoy!
 
-Check out the [StackBlitz Demo](https://yqniazbw.github.stackblitz.io)
+Check out the [Demo](https://calendar-generator-574b5.firebaseapp.com/#/calendar-generator)
 
 
