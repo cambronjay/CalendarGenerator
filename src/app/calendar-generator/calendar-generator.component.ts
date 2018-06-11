@@ -7,7 +7,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { countryCodes, countryCodePattern } from '../app.constants';
 import { DateAdapter } from '@angular/material/core';
 import { genCalendarObj } from 'calendar-generator';
-import { Calendar } from '../../interfaces/calendar.interface';
 import * as moment from 'moment';
 import * as holidays from 'date-holidays';
 import * as _ from 'lodash';
@@ -19,7 +18,8 @@ export class Country {
 @Component({
   selector: 'calendar-generator',
   templateUrl: './calendar-generator.component.html',
-  styleUrls: ['./calendar-generator.component.css']
+  styleUrls: ['./calendar-generator.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class CalendarGeneratorComponent {
@@ -33,7 +33,7 @@ export class CalendarGeneratorComponent {
     map(result => result.matches)
     );
 
-  constructor(private breakpointObserver: BreakpointObserver, private menuService: MenuService, private fb: FormBuilder, private adapter: DateAdapter<any>) { }
+  constructor(private breakpointObserver: BreakpointObserver, private menuService: MenuService, private fb: FormBuilder, private adapter: DateAdapter<any>, private ref: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.calendarForm = this.fb.group({
