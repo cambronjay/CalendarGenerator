@@ -179,7 +179,7 @@ export class CalendarGeneratorComponent {
       let daysInRangeInMonth = _.filter(days, function (o) {
         return o.year == year && o.month == m;
       });
-      let monthOfYear = m - 1;
+      let monthOfYear = m;
       let month = {
         month: moment(monthOfYear.toString(), 'MM').format('MMMM'),
         year: moment(year.toString(), 'YYYY').format('YYYY'),
