@@ -27,6 +27,7 @@ export class CalendarGeneratorComponent {
   private filteredCountries: Observable<any[]>;
   private countries: Country[] = countryCodes;
   private calendars = [];
+  private daysOfWeek = [];
   private isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
     map(result => result.matches)
@@ -58,6 +59,11 @@ export class CalendarGeneratorComponent {
       let checkValidity = this.calendarForm.get('countryCode').valid;
       if (checkValidity) {
         this.adapter.setLocale(this.calendarForm.get('countryCode').value.toLowerCase());
+        if (this.calendarForm.get('countryCode').value.toLowerCase() == 'us') {
+          moment.locale('en');
+        } else {
+          moment.locale(this.calendarForm.get('countryCode').value.toLowerCase());
+        }
         this.calendarForm.get('startDate').enable();
         this.calendarForm.get('numberOfDays').enable();
       } else {
@@ -69,8 +75,8 @@ export class CalendarGeneratorComponent {
 
   private generate(): void {
     this.calendars = [];
-    moment.locale(this.calendarForm.get('countryCode').value.toLowerCase());
     let startDate = moment(this.calendarForm.get('startDate').value).format('YYYY-MM-DD');
+    this.daysOfWeek = moment().localeData().weekdaysMin();
     let endDate = moment(this.calendarForm.get('startDate').value).add(this.calendarForm.get('numberOfDays').value, 'days').format('YYYY-MM-DD');
     let calendar = genCalendarObj(startDate, endDate);
     let calendarDate = Array.from(Object.keys(calendar.date), k => calendar.date[k]);
@@ -90,8 +96,7 @@ export class CalendarGeneratorComponent {
       }
       years.push(year);
     }
-    const startDay = moment().clone().startOf('month').startOf('week');
-    const endDay = moment().clone().endOf('month').endOf('week');
+
     years.forEach(year => {
       year.months = _.filter(year.months, function (o) {
         return o.weeksInMonth != null;
@@ -104,51 +109,6 @@ export class CalendarGeneratorComponent {
     return this.countries.filter(country =>
       (country.name.toLowerCase().indexOf(identifier.toLowerCase()) === 0) || (country.code.toLowerCase().indexOf(identifier.toLowerCase()) === 0)
     );
-  }
-
-  private lookUpMonth(day: number): string {
-    let month;
-    switch (day) {
-      case 1:
-        month = 'January';
-        break;
-      case 2:
-        month = 'February';
-        break;
-      case 3:
-        month = 'March';
-        break;
-      case 4:
-        month = 'April';
-        break;
-      case 5:
-        month = 'May';
-        break;
-      case 6:
-        month = 'June';
-        break;
-      case 7:
-        month = 'July';
-        break;
-      case 8:
-        month = 'August';
-        break;
-      case 9:
-        month = 'September';
-        break;
-      case 10:
-        month = 'October';
-        break;
-      case 11:
-        month = 'November';
-        break;
-      case 12:
-        month = 'December';
-        break;
-      default:
-        month = 'January';
-    }
-    return month;
   }
 
   private visibleDaysInMonth(daysInRangeInMonth: any, numberOfdaysInMonth: number, year: number, month: number): Array<any> {
@@ -219,11 +179,10 @@ export class CalendarGeneratorComponent {
       let daysInRangeInMonth = _.filter(days, function (o) {
         return o.year == year && o.month == m;
       });
-     
-      console.log(moment('09', 'MM').format('MMMM'))
+      let monthOfYear = m - 1;
       let month = {
-        month: moment().month(m-1),
-        year: year.toString(),
+        month: moment(monthOfYear.toString(), 'MM').format('MMMM'),
+        year: moment(year.toString(), 'YYYY').format('YYYY'),
         weeksInMonth: daysInRangeInMonth.length > 0 ? this.visibleDaysInMonth(daysInRangeInMonth, numberOfdaysInMonth, year, m) : null,
       }
 

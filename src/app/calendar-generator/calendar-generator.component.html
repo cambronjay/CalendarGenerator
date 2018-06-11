@@ -53,13 +53,7 @@
           </header>
           <article>
             <div class="days">
-              <b>SU</b>
-              <b>MO</b>
-              <b>TU</b>
-              <b>WE</b>
-              <b>TH</b>
-              <b>FR</b>
-              <b>SA</b>
+              <b *ngFor="let weekday of daysOfWeek">{{weekday}}</b>
             </div>
             <div class="dates">
               <div *ngFor="let week of month.weeksInMonth">
