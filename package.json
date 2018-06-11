@@ -9,6 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "author": "Jay Cambron",
   "private": true,
   "dependencies": {
     "@angular/animations": "^6.0.3",
