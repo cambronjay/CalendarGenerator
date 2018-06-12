@@ -1,4 +1,4 @@
-# CalendarGenerator
+# Calendar Generator
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.7 and utilizes [Angular Material](https://github.com/angular/material2) version 6.2.0
 
